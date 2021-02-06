@@ -1,4 +1,18 @@
 <script>
+  let env = {};
+
+  if (window.location.origin == "http://localhost:5000") {
+    env.BASE_URL = "http://127.0.0.1:12345";
+    env.STRIPE_PK = "pk_test_tPbMvTrbl6tx2Cj2kHgxAKDP";
+    env.STRIPE_PRICE = "price_0IAN7QBwgK7GRcbp1b5BO8ed";
+  }
+
+  if (window.location.origin == "https://romantic-shirley-e41538.netlify.app") {
+    env.BASE_URL = "https://holy-show-api.herokuapp.com";
+    env.STRIPE_PK = "pk_test_tPbMvTrbl6tx2Cj2kHgxAKDP";
+    env.STRIPE_PRICE = "price_0IAN7QBwgK7GRcbp1b5BO8ed";
+  }
+
   export let session_id;
   let state = "open";
   let api_url = `${process.env.BASE_URL}/create-checkout-session`;
