@@ -15,10 +15,10 @@
 
   export let session_id;
   let state = "open";
-  let api_url = `${process.env.BASE_URL}/create-checkout-session`;
-  const stripe = window.Stripe(process.env.STRIPE_PK);
+  let api_url = `${env.BASE_URL}/create-checkout-session`;
+  const stripe = window.Stripe(env.STRIPE_PK);
   let sub = {
-    priceId: process.env.STRIPE_PRICE,
+    priceId: env.STRIPE_PRICE,
     start: "current",
   };
 
