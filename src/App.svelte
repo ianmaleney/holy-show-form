@@ -1,16 +1,25 @@
 <script>
   let env = {};
 
+  // Dev
   if (window.location.origin == "http://localhost:5000") {
     env.BASE_URL = "http://127.0.0.1:12345";
     env.STRIPE_PK = "pk_test_tPbMvTrbl6tx2Cj2kHgxAKDP";
     env.STRIPE_PRICE = "price_0IAN7QBwgK7GRcbp1b5BO8ed";
   }
 
+  // Staging
   if (window.location.origin == "https://romantic-shirley-e41538.netlify.app") {
     env.BASE_URL = "https://holy-show-api.herokuapp.com";
     env.STRIPE_PK = "pk_test_tPbMvTrbl6tx2Cj2kHgxAKDP";
     env.STRIPE_PRICE = "price_0IAN7QBwgK7GRcbp1b5BO8ed";
+  }
+
+  // Production
+  if (window.location.origin == "https://holyshow.ie") {
+    env.BASE_URL = "https://holy-show-api.herokuapp.com";
+    env.STRIPE_PK = "{{!!SET THIS}}";
+    env.STRIPE_PRICE = "{{!!SET THIS}}";
   }
 
   export let session_id;
