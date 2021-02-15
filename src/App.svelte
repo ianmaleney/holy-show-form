@@ -49,6 +49,15 @@
     }
   };
 
+  let wakeup = async () => {
+    try {
+      return await fetch(env.BASE_URL).then((res) => res.text());
+    } catch (error) {
+      state = "open";
+      console.log(error);
+    }
+  };
+
   let submit = async () => {
     state = "pending";
     createCheckoutSession(sub).then((data) => {
@@ -69,7 +78,7 @@
   <div class="formwrapper">
     <!-- Open Form -->
     {#if state == "open"}
-      <form>
+      <form on:focus={wakeup()}>
         <label for="subform_subscription">
           Start:
           <select id="subform_subscription" bind:value={sub.start}>
