@@ -32,6 +32,7 @@
   };
 
   const createCheckoutSession = async (subData) => {
+    console.log({ subData });
     try {
       return await fetch(api_url, {
         method: "POST",
