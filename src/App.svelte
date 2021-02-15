@@ -4,22 +4,22 @@
   // Dev
   if (window.location.origin == "http://localhost:5000") {
     env.BASE_URL = "http://127.0.0.1:12345";
-    env.STRIPE_PK = "pk_test_tPbMvTrbl6tx2Cj2kHgxAKDP";
-    env.STRIPE_PRICE = "price_0IAN7QBwgK7GRcbp1b5BO8ed";
+    env.STRIPE_PK = "pk_test_fadSqn0gB7MqLySRtfOBWR1w005p3NxTcH";
+    env.STRIPE_PRICE = "price_1IBiDdLj2v47piuQoQTCblSJ";
   }
 
   // Staging
   if (window.location.origin == "https://romantic-shirley-e41538.netlify.app") {
     env.BASE_URL = "https://holy-show-api.herokuapp.com";
-    env.STRIPE_PK = "pk_test_tPbMvTrbl6tx2Cj2kHgxAKDP";
-    env.STRIPE_PRICE = "price_0IAN7QBwgK7GRcbp1b5BO8ed";
+    env.STRIPE_PK = "pk_live_3ymhvrYbROWIf6UL18F4QOoL00KiG6nOWP";
+    env.STRIPE_PRICE = "price_1IBiDdLj2v47piuQoQTCblSJ";
   }
 
   // Production
   if (window.location.origin == "https://holyshow.ie") {
     env.BASE_URL = "https://holy-show-api.herokuapp.com";
-    env.STRIPE_PK = "{{!!SET THIS}}";
-    env.STRIPE_PRICE = "{{!!SET THIS}}";
+    env.STRIPE_PK = "pk_live_3ymhvrYbROWIf6UL18F4QOoL00KiG6nOWP";
+    env.STRIPE_PRICE = "price_1IBiDdLj2v47piuQoQTCblSJ";
   }
 
   export let session_id;
@@ -153,6 +153,7 @@
     border: 1px solid #ffd701;
     padding: 1.6rem;
     max-width: 640px;
+    margin: 20px 10px;
   }
   button {
     background-color: rgb(255, 215, 1);
