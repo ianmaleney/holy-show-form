@@ -38,7 +38,6 @@
   let submit = async (e) => {
     e.preventDefault();
     state.update((v) => "pending");
-    // let cardElement = document.getElementById("card-element");
 
     // Submit the data
     try {
@@ -52,25 +51,34 @@
 
       console.log({ res });
 
-      // Handle the payment
-      stripe
-        .confirmCardPayment(res.clientSecret, {
-          payment_method: {
-            card: card,
-            billing_details: {
-              name: sub.name,
+      if (res.clientSecret) {
+        // Handle the payment
+        stripe
+          .confirmCardPayment(res.clientSecret, {
+            payment_method: {
+              card: card,
+              billing_details: {
+                name: sub.name,
+              },
             },
-          },
-        })
-        .then((result) => {
-          if (result.error) {
-            alert(result.error.message);
-          } else {
-            // Successful subscription payment
-            console.log({ result });
-            state.update((v) => result.paymentIntent.status);
-          }
-        });
+          })
+          .then((result) => {
+            if (result.error) {
+              alert(result.error.message);
+            } else {
+              // Successful subscription payment
+              console.log({ result });
+              state.update((v) => result.paymentIntent.status);
+            }
+          });
+      } else {
+        if (res.start === "current") {
+          state.update((v) => "open");
+          alert("There has been an unknown error. Please try again.");
+        } else {
+          state.update((v) => "succeeded");
+        }
+      }
     } catch (error) {
       console.error(error);
     }
