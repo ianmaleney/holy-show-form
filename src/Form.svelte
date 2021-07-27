@@ -50,6 +50,8 @@
         body: JSON.stringify(sub),
       }).then((d) => d.json());
 
+      console.log({ res });
+
       // Handle the payment
       stripe
         .confirmCardPayment(res.clientSecret, {
