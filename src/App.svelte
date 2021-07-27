@@ -23,8 +23,8 @@
   // Staging
   if (window.location.origin == "https://romantic-shirley-e41538.netlify.app") {
     env.BASE_URL = "https://holy-show-api.herokuapp.com";
-    env.STRIPE_PK = "pk_test_fadSqn0gB7MqLySRtfOBWR1w005p3NxTcH";
-    env.STRIPE_PRICE = "price_1IBiDdLj2v47piuQoQTCblSJ";
+    env.STRIPE_PK = "pk_live_3ymhvrYbROWIf6UL18F4QOoL00KiG6nOWP";
+    env.STRIPE_PRICE = "price_1IL59mLj2v47piuQOeS2GBnb";
   }
 
   // Production

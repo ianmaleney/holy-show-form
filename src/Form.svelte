@@ -72,7 +72,7 @@
             }
           });
       } else {
-        if (res.start === "current") {
+        if (res.start === "current" || !res.subscriptionId) {
           state.update((v) => "open");
           alert("There has been an unknown error. Please try again.");
         } else {
