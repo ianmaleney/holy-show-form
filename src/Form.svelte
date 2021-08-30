@@ -72,6 +72,13 @@
             }
           });
       } else {
+        if (res.existing_customer) {
+          state.update((v) => "open");
+          alert(
+            "There is already a subscriber with that email address. Please choose another."
+          );
+          return;
+        }
         if (res.start === "current" || !res.subscriptionId) {
           state.update((v) => "open");
           alert("There has been an unknown error. Please try again.");
@@ -182,8 +189,8 @@
   <label for="subform_subscription" aria-required="true">
     Start:
     <select id="subform_subscription" bind:value={sub.start}>
-      <option value="current" selected>With Current Issue</option>
-      <option value="next">With Next Issue</option>
+      <option value="current" selected>With Issue 3 (Current Issue)</option>
+      <option value="next">With Issue 4 (Summer 2022)</option>
     </select>
   </label>
 
