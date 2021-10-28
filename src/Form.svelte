@@ -5,11 +5,7 @@
   const stripe = window.Stripe(env.STRIPE_PK);
   let elements = stripe.elements();
   let api_url = `${env.BASE_URL}/create-subscription`;
-  let card, formState;
-
-  state.subscribe((v) => {
-    formState = v;
-  });
+  let card;
 
   let sub = {
     priceId: env.STRIPE_PRICE,
@@ -26,18 +22,30 @@
     },
   };
 
-  let wakeup = async () => {
-    try {
-      return await fetch(env.BASE_URL).then((res) => res.text());
-    } catch (error) {
-      state.update((v) => "open");
-      console.log(error);
-    }
+  const check_input_validity = (arr) => {
+    let valid = true;
+    arr.forEach((el) => {
+      if (!el.checkValidity()) {
+        console.log("Invalid input");
+        valid = false;
+        return;
+      }
+    });
+    return valid;
   };
 
   let submit = async (e) => {
     e.preventDefault();
     state.update((v) => "pending");
+
+    // Validate the data
+    let inputs = document.querySelectorAll("#payment-form input");
+
+    if (check_input_validity([...inputs]) == false) {
+      state.update((v) => "open");
+      alert("Your info isn't quite right – have another look?");
+      return;
+    }
 
     // Submit the data
     try {
@@ -88,6 +96,7 @@
       }
     } catch (error) {
       console.error(error);
+      alert(error);
     }
   };
 
@@ -97,6 +106,7 @@
     card.on("change", function (event) {
       displayError(event);
     });
+
     function displayError(event) {
       let displayError = document.getElementById("card-element-errors");
       if (event.error) {
@@ -108,16 +118,13 @@
   });
 </script>
 
-<form
-  id="payment-form"
-  on:focus={wakeup}
-  class={formState === "pending" ? "pending" : ""}
->
+<form id="payment-form" class={$state === "pending" ? "pending" : ""}>
   <label for="payment-form--name" aria-required="true">Name</label>
   <input
     type="text"
     name="name"
     id="payment-form--name"
+    placeholder=" "
     required
     bind:value={sub.name}
   />
@@ -127,9 +134,11 @@
     type="email"
     name="email"
     id="payment-form--email"
+    placeholder=" "
     required
     bind:value={sub.email}
   />
+  <span class="validation-message">Invalid email address.</span>
 
   <label for="payment-form--address-line1" aria-required="true"
     >Street Address</label
@@ -138,6 +147,7 @@
     type="text"
     name="address-line1"
     id="payment-form--address-line1"
+    placeholder=" "
     required
     bind:value={sub.address.line1}
   />
@@ -147,6 +157,7 @@
     type="text"
     name="address-line2"
     id="payment-form--address-line2"
+    placeholder=" "
     bind:value={sub.address.line2}
   />
 
@@ -155,6 +166,7 @@
     type="text"
     name="city"
     id="payment-form--city"
+    placeholder=" "
     required
     bind:value={sub.address.city}
   />
@@ -164,6 +176,7 @@
     type="text"
     name="state"
     id="payment-form--state"
+    placeholder=" "
     required
     bind:value={sub.address.state}
   />
@@ -173,6 +186,7 @@
     type="text"
     name="postal-code"
     id="payment-form--postal-code"
+    placeholder=" "
     bind:value={sub.address.postal_code}
     required
   />
@@ -182,6 +196,7 @@
     type="text"
     name="country-name"
     id="payment-form--country-name"
+    placeholder=" "
     bind:value={sub.address.country}
     required
   />
@@ -200,7 +215,7 @@
 
   <!-- We'll put the error messages in this element -->
   <div id="card-element-errors" role="alert" />
-  <button on:click={submit}>Subscribe for €10 / year</button>
+  <button id="submit-button" on:click={submit}>Subscribe for €10 / year</button>
 </form>
 
 <style>
@@ -229,6 +244,30 @@
     font-size: 12px;
     margin: 4px 0 20px;
     width: 100%;
+  }
+
+  input:invalid {
+    outline: 1px solid red;
+    margin-bottom: 5px;
+  }
+  .validation-message {
+    display: none;
+    font-size: 11px;
+    font-family: "PT Serif", "Times New Roman", Times, serif;
+  }
+
+  input:invalid + .validation-message {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  input:placeholder-shown {
+    outline: none !important;
+    margin-bottom: 20px !important;
+  }
+
+  input:placeholder-shown + .validation-message {
+    display: none;
   }
 
   #card-element {

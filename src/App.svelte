@@ -1,16 +1,12 @@
 <script>
+  import { onMount } from "svelte";
   import Form from "./Form.svelte";
   import Loader from "./Loader.svelte";
   import { state } from "./store";
-  let formState;
   let env = {};
 
-  state.subscribe((v) => {
-    formState = v;
-  });
-
   $: {
-    console.log(`formState: ${formState}`);
+    console.log(`state: ${$state}`);
   }
 
   // Dev
@@ -33,27 +29,34 @@
     env.STRIPE_PK = "pk_live_3ymhvrYbROWIf6UL18F4QOoL00KiG6nOWP";
     env.STRIPE_PRICE = "price_1IL59mLj2v47piuQOeS2GBnb";
   }
+
+  onMount(() => {
+    console.log("Origin: ", window.location.origin);
+    fetch(`${env.BASE_URL}`)
+      .then((res) => res.text())
+      .then((m) => console.log(m));
+  });
 </script>
 
 <div class="formwrapper">
   <!-- Open Form -->
-  {#if formState == "open" || formState == "pending"}
+  {#if $state == "open" || $state == "pending"}
     <Form {env} />
     <!-- Loading State -->
-    {#if formState == "pending"}
+    {#if $state == "pending"}
       <Loader />
     {/if}
   {/if}
 
   <!-- Closed State -->
-  {#if formState == "closed"}
+  {#if $state == "closed"}
     <div class="messagewrapper">
       <h1>This is a message.</h1>
     </div>
   {/if}
 
   <!-- Success State -->
-  {#if formState == "succeeded"}
+  {#if $state == "succeeded"}
     <div class="messagewrapper">
       <h1>Success!</h1>
       <p>
