@@ -5,7 +5,8 @@
   const stripe = window.Stripe(env.STRIPE_PK);
   let elements = stripe.elements();
   let api_url = `${env.BASE_URL}/create-subscription`;
-  let card;
+  let card, user_alert_message;
+  let user_alert_visible = false;
 
   let sub = {
     priceId: env.STRIPE_PRICE,
@@ -34,6 +35,11 @@
     return valid;
   };
 
+  const alert_the_user = (message) => {
+    user_alert_message = message;
+    user_alert_visible = true;
+  };
+
   let submit = async (e) => {
     e.preventDefault();
     state.update((v) => "pending");
@@ -43,7 +49,7 @@
 
     if (check_input_validity([...inputs]) == false) {
       state.update((v) => "open");
-      alert("Your info isn't quite right – have another look?");
+      alert_the_user("Your info isn't quite right – have another look?");
       return;
     }
 
@@ -72,7 +78,7 @@
           })
           .then((result) => {
             if (result.error) {
-              alert(result.error.message);
+              alert_the_user(result.error.message);
             } else {
               // Successful subscription payment
               console.log({ result });
@@ -82,21 +88,21 @@
       } else {
         if (res.existing_customer) {
           state.update((v) => "open");
-          alert(
+          alert_the_user(
             "There is already a subscriber with that email address. Please choose another."
           );
           return;
         }
         if (res.start === "current" || !res.subscriptionId) {
           state.update((v) => "open");
-          alert("There has been an unknown error. Please try again.");
+          alert_the_user("There has been an unknown error. Please try again.");
         } else {
           state.update((v) => "succeeded");
         }
       }
     } catch (error) {
       console.error(error);
-      alert(error);
+      alert_the_user(error);
     }
   };
 
@@ -216,6 +222,21 @@
   <!-- We'll put the error messages in this element -->
   <div id="card-element-errors" role="alert" />
   <button id="submit-button" on:click={submit}>Subscribe for €10 / year</button>
+
+  <!-- Alert the user (sandboxed-iframe workaround) -->
+  {#if user_alert_visible}
+    <div id="user-alert">
+      <div class="user-alert-underlay" />
+      <div class="user-alert-text">
+        <p>{user_alert_message}</p>
+        <button
+          on:click={() => {
+            user_alert_visible = false;
+          }}>Dismiss</button
+        >
+      </div>
+    </div>
+  {/if}
 </form>
 
 <style>
@@ -223,6 +244,7 @@
     max-width: 420px;
     border: 1px solid #eee;
     padding: 15px 8px;
+    position: relative;
   }
 
   :global(.pending) {
@@ -292,5 +314,36 @@
   button:hover {
     background-color: #c28f10;
     cursor: pointer;
+  }
+
+  #user-alert {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+  }
+  .user-alert-underlay {
+    background-color: rgba(0, 0, 0, 0.45);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .user-alert-text {
+    background-color: white;
+    border: 2px solid #c28f10;
+    border-radius: 6px;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 120;
+    position: relative;
+    max-width: 80%;
+    padding: 10px;
   }
 </style>
