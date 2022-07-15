@@ -210,8 +210,8 @@
   <label for="subform_subscription" aria-required="true">
     Start:
     <select id="subform_subscription" bind:value={sub.start}>
-      <option value="current" selected>With Issue 3 (Current Issue)</option>
-      <option value="next">With Issue 4 (Summer 2022)</option>
+      <option value="current" selected>With Issue 4 (Current Issue)</option>
+      <option value="next">With Issue 5 (Summer 2023)</option>
     </select>
   </label>
 
