@@ -55,6 +55,28 @@
 
     // Submit the data
     try {
+      // Handle paymentMethod creation.
+      if (sub.start == "next") {
+        try {
+          await stripe
+            .createPaymentMethod({
+              type: "card",
+              card: card,
+              billing_details: {
+                name: sub.name,
+                email: sub.email,
+              },
+            })
+            .then(function (result) {
+              sub.paymentMethod = result.paymentMethod.id;
+            });
+        } catch (error) {
+          console.error(error);
+          state.update((v) => "open");
+          alert_the_user("Failed to create payment method.");
+        }
+      }
+
       let res = await fetch(api_url, {
         method: "post",
         headers: {
