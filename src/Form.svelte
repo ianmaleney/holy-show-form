@@ -7,6 +7,8 @@
   let api_url = `${env.BASE_URL}/create-subscription`;
   let card, user_alert_message;
   let user_alert_visible = false;
+  console.log(env.STRIPE_PK);
+  console.log({ stripe });
 
   let sub = {
     priceId: env.STRIPE_PRICE,
